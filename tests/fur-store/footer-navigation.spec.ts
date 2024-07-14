@@ -26,11 +26,10 @@ test('Footer Navigation to Help ', async ({}) => {
 
 test('Footer Navigation to Contact us ', async ({}) => {
   await page.getByRole('link', { name: 'Get in touch' }).click();
-  await page.goBack();
-  await page.locator('p').filter({ hasText: 'fur@example.com' }).click();
-  await page.goBack();
+  await page.goBack(); 
+  await page.getByRole('link', { name: 'fur@example.com' }).click();
+  await page.getByRole('contentinfo').click();
   await page.getByRole('link', { name: '+1' }).click();
-  await page.goBack();
   //clicking on social media icons
  // await page.locator('li').filter({ hasText: 'Contact Us Need help with' }).locator('div').getByRole('link').first().click();
  //await page.locator('body > footer > div > ul > li:nth-child(4) > div > a.youtube > svg').click();
@@ -43,6 +42,8 @@ test('Footer Navigation to Contact us ', async ({}) => {
   await expect(page.getByRole('heading', { name: 'Contact Us' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Get in touch' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'fur@example.com' })).toBeVisible();
+ 
+ 
   await expect(page.getByRole('link', { name: '+1' })).toBeVisible();
   await expect(page.locator('li').filter({ hasText: 'Contact Us Need help with' }).locator('div').getByRole('link').first()).toBeVisible();
   await expect(page.locator('li').filter({ hasText: 'Contact Us Need help with' }).locator('div').getByRole('link').nth(1)).toBeVisible();
@@ -65,6 +66,6 @@ test('Footer info Navigation', async ({}) => {
   //await expect(page.getByText('2023')).toEqual(now);
   //await expect(page.getByRole('contentinfo')).toContainText('All Rights Reserved © 2023 Fur, Inc. Template by CloudCannon');
   
-  await expect(page.getByText('All Rights Reserved © 2023')).toContainText('All Rights Reserved © ${currentYear}');
+  await expect(page.getByText('All Rights Reserved © 2023')).toContainText(`All Rights Reserved © ${currentYear} Fur, Inc. Template by CloudCannon`);
 await page.locator('li').filter({ hasText: 'Contact Us Need help with' }).locator('div').getByRole('link').first().click();
 });
