@@ -6,7 +6,6 @@ test.beforeAll( async ({ browser }) => {
   page = await context.newPage();
   await page.goto('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/');
   
-  
 });
 
 test('Sacha the Deer product details', async ({ }) => {
