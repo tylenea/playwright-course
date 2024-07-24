@@ -5,9 +5,6 @@ constructor(private page: Page) {
 this.page = page;
 }
 
-getHeading = () => {
-    return this.page.getByRole("heading", {name: "Get in touch" });
-};
 
 getFormTitle = () => {
     return this.page.getByRole("heading", {name: "Send us a message" });
