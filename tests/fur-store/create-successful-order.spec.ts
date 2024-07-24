@@ -1,6 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import { CartComponent } from '../../components/CartComponent';
 import { PaymentDetailsComponent } from '../../components/PaymentDetailComponent';
+import { PaymentPage } from '../../pages/PaymentPage';
 import { pathToFileURL } from 'url';
 let page: Page;
 
@@ -14,13 +15,13 @@ test.beforeAll( async ({ browser }) => {
 
 test('Create an order should display success page', async ({}) => {
   const cart = new CartComponent(page);
-  const paymentDetails = new PaymentDetailsComponent(page);
+  const paymentPage = new PaymentPage(page);
  
   await cart.addToCart('Bumble the Elephant' );
   await cart.changeCartOptions();
   await cart.checkout();
  
-  await paymentDetails.fillOutForm();
+  await paymentPage.billingDetails.fillOutForm();
   
   await page.waitForResponse(
    (response) =>
@@ -29,19 +30,14 @@ test('Create an order should display success page', async ({}) => {
       response.request().method() === "GET"
   );
   
-  await paymentDetails.fillOutApartment();
-  await paymentDetails.FillOutCity();
-  await paymentDetails.fillOutZipCode();
+  await paymentPage.billingDetails.fillOutApartment();
+  await paymentPage.billingDetails.FillOutCity();
+  await paymentPage.billingDetails.fillOutZipCode();
  
-  await paymentDetails.submit();
+  await paymentPage.billingDetails.submit();
  
-  await paymentDetails.fillCardDetails();
+  await paymentPage.paymentDetails.fillCardDetails();
+  await paymentPage.paymentDetails.placeOrder();
  
-  await paymentDetails.placeOrder();
- 
-  await paymentDetails.assertSuccessScreen();
-  //DIRTY_FIX wait for 5 sec 
- // await page.waitForTimeout(5000);
- //PROPER_FIX wait for response  
-
+  await paymentPage.successfulPayment.assertSuccessScreen();
 });
