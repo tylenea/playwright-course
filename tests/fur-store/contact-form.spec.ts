@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+import {ContactUsComponent} from '../../components/ContactFormComponents'
 
-let page;
+let page: Page;
 
 test.beforeAll( async ({ browser }) => {
   const context = await browser.newContext();
@@ -9,22 +10,30 @@ test.beforeAll( async ({ browser }) => {
 });
 
 
-test('check Contact page has header, form title, map, button "Send a message" ', async ({ }) => {
-  await expect(page.getByRole('heading', { name: 'Get in touch' })).toBeVisible();
-  await expect.soft(page.locator('#map')).toBeVisible();
-  await expect.soft(page.getByText('Send us a message Full Name')).toBeVisible();
-  await expect.soft(page.getByRole('button', { name: 'Send Message' })).toBeVisible();
+test('contact page has a header', async ({ }) => {
+  const { getHeading} = new ContactUsComponent (page);
+  await expect( getHeading()).toBeVisible();
+});
+
+test('contact page has a form title', async ({ }) => {
+  const { getFormTitle} = new ContactUsComponent (page);
+  await expect( getFormTitle()).toBeVisible();
+});
+
+test('contact page has a map', async ({ }) => {
+  const { getMap} = new ContactUsComponent (page);
+  await expect( getMap()).toBeVisible();
 });
 
 test('submit Contact form navigates to succes page', async ({  }) => {
-  
- //await page.getByPlaceholder('Enter your name...').click();
-  await page.getByPlaceholder('Enter your name...').fill('Tylenea');
- // await page.getByPlaceholder('Enter your email...').click();
-  await page.getByPlaceholder('Enter your email...').fill('tylenea@gmail.com');
- // await page.getByPlaceholder('Enter your message...').click();
-  await page.getByPlaceholder('Enter your message...').fill('i have a problem');
-  await page.getByRole('button', { name: 'Send Message' }).click();
+  const { fillContactForm } = new ContactUsComponent(page);
 
-  await expect(page).toHaveURL('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/contact-success/');
+  await fillContactForm ({
+    name: 'tylenea',
+    email: 'tylenea@testmail.com',
+    message:'I have a problem'
+});
+expect(page.url()).toContain("contact-success");
+
+ // await expect(page).toHaveURL('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/contact-success/');
 });

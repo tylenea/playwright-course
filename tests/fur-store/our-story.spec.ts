@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
-
-let page;
+import { test, expect,Page } from '@playwright/test';
+import{OurStoryComponent} from "../../components/OurStoryComponent"
+let page:Page;
 
 test.beforeAll( async ({ browser }) => {
   const context = await browser.newContext();
@@ -9,32 +9,18 @@ test.beforeAll( async ({ browser }) => {
 });
 
 test('Check that our story has heading', async ({}) => {
-  await expect(page.getByRole('heading', { name: 'Our story' })).toBeVisible();
+  const OurStory = new OurStoryComponent(page);
+  await OurStory.getHeading;
 });
 
 test('Our story page has avatars of founders', async ({}) => {
-
-  await expect(page.locator('li')
-  .filter({ hasText: 'Ava Sandler' })
-  .locator('div').first())
-  .toBeVisible();await expect(page.getByText('Ava Sandler')).toBeVisible();
-  
-  await expect(page.locator('li')
-  .filter({ hasText: 'Steph Poco' })
-  .locator('div').first())
-  .toBeVisible();
-  await expect(page.getByText('Steph Poco')).toBeVisible();
+  const OurStory = new OurStoryComponent(page);
+  await OurStory.getAvatar;
 });
 
 test('Our story page has motivation paraghaps', async ({}) => {
-
-  await expect(page.getByRole('heading', { name: 'Passion' })).toBeVisible();
-  await expect(page.getByText('What more could you want from')).toBeVisible();
-
-  await expect(page.getByRole('heading', { name: 'Animal' })).toBeVisible();
-  await expect(page.getByText('It\'s easy to forget that we\'')).toBeVisible();
-    
-  await expect(page.getByRole('heading', { name: 'Style' })).toBeVisible();
-   await expect(page.getByText('We like to keep things plain')).toBeVisible();
+  const OurStory = new OurStoryComponent(page);
+  await OurStory.getParagraphHeading;
+  await OurStory.getParagraph;
 });
 

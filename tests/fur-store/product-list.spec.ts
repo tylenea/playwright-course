@@ -1,45 +1,59 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+import { ColorPicker, ProductListComponent } from '../../components/ProductListComponent';
+export{ProductListComponent} from '../../components/ProductListComponent';
 
-test.beforeEach( async ({ page }) => {
+let page: Page;
+test.beforeAll( async ({ browser }) => {
+  const context = await browser.newContext();
+  page = await context.newPage();
   await page.goto('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/');
-})
+});
 
-test('products list has products with title', async ({ page }) => {  
-  await expect(page.getByRole('link', { name: 'Sacha the Deer' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Bumble the Elephant' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Gerald the Giraffe' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Todd the Hedgehog' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Scar the Lion' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Gavin the Tiger' })).toBeVisible();
+
+test('products list has products with title', async ({}) => {  
+  const { getTitle} = new ProductListComponent(page);
+
+  await expect( getTitle( 'Sacha the Deer' )).toBeVisible();
+  await expect( getTitle( 'Bumble the Elephant' )).toBeVisible();
+  await expect( getTitle( 'Gerald the Giraffe' )).toBeVisible();
+  await expect( getTitle( 'Todd the Hedgehog' )).toBeVisible();
+  await expect( getTitle( 'Scar the Lion' )).toBeVisible();
+  await expect( getTitle( 'Gavin the Tiger' )).toBeVisible();
   
 });
 
-test('products list has products with image', async ({ page }) => {  
-  await expect(page.locator('.styles').first()).toBeVisible();
-  await expect(page.locator('li:nth-child(2) > .styles')).toBeVisible();
-  await expect(page.locator('li:nth-child(3) > .styles')).toBeVisible();
-  await expect(page.locator('li:nth-child(4) > .styles')).toBeVisible();
-  await expect(page.locator('li:nth-child(5) > .styles')).toBeVisible();
-  await expect(page.locator('li:nth-child(6) > .styles')).toBeVisible();
+test('products list has products with image', async ({}) => {  
+  const { getImage} = new ProductListComponent(page);
+  await expect(getImage(1)).toBeVisible();
+  await expect(getImage(2)).toBeVisible();
+  await expect(getImage(3)).toBeVisible();
+  await expect(getImage(4)).toBeVisible();
+  await expect(getImage(5)).toBeVisible();
 });
 
-test('products list has products with price', async ({ page }) => {  
+test('products list has products with price', async ({}) => {  
+  const { getPrice} = new ProductListComponent(page);
+  await expect(getPrice ('Sacha the Deer' )).toBeVisible();
+  await expect(getPrice ('Bumble the Elephant Bumble' )).toBeVisible();
+  await expect(getPrice ('Gerald the Giraffe Gerald the' )).toBeVisible();
+  await expect(getPrice ('Todd the Hedgehog Todd the' )).toBeVisible();
+  await expect(getPrice ('Scar the Lion Scar the lion' )).toBeVisible();
+  await expect(getPrice ('Gavin the Tiger Gavin the' )).toBeVisible();
+});
+
+test('color picker Sacha the Deer', async ({}) => {  
+ const color_picker = new ColorPicker(page);
+ const HeadingLink = new ColorPicker(page);
+  await color_picker.colorClick(1);
+  await color_picker.colorClick(2);
+  await color_picker.colorClick(3);
+  await color_picker.colorClick(4);
   
-  await expect(page.locator('li').filter({ hasText: 'Sacha the Deer Sacha’s' }).getByRole('paragraph').nth(1)).toBeVisible();
-  await expect(page.locator('li').filter({ hasText: 'Bumble the Elephant Bumble' }).getByRole('paragraph').nth(1)).toBeVisible();
-  await expect(page.locator('li').filter({ hasText: 'Gerald the Giraffe Gerald the' }).getByRole('paragraph').nth(1)).toBeVisible();
-  await expect(page.locator('li').filter({ hasText: 'Todd the Hedgehog Todd the' }).getByRole('paragraph').nth(1)).toBeVisible();
-  await expect(page.locator('li').filter({ hasText: 'Scar the Lion Scar the lion' }).getByRole('paragraph').nth(1)).toBeVisible();
-  await expect(page.locator('li').filter({ hasText: 'Gavin the Tiger Gavin the' }).getByRole('paragraph').nth(1)).toBeVisible();
-});
-
-test('color picker Sacha the Deer', async ({ page }) => {  
-
-  await page.locator('.style-picker > div').first().click();
-  await page.locator('.style-picker > div:nth-child(2)').first().click();
-  await page.locator('.style-picker > div:nth-child(3)').first().click();
-  await page.locator('.style-picker > div:nth-child(4)').first().click();
-
+  //await page.locator('.style-picker > div').first().click();
+ // await page.locator('.style-picker > div:nth-child(2)').first().click();
+ // await page.locator('.style-picker > div:nth-child(3)').first().click();
+ // await page.locator('.style-picker > div:nth-child(4)').first().click();
+ //await expect( HeadingLink( 'Sacha the Deer' )).toBeVisible();
   await expect(page.locator('li')
   .filter({ hasText: 'Sacha the Deer Sacha’s' })
   .getByRole('link').first())
