@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { LogInComponent } from '../../components-sauce-demo/LogInComponent';
+import { PaymentPage } from '../../sauce-demo-pages/Payment-page';
+import { CartComponent} from '../../components-sauce-demo/cart-component';
+import { ProductDetails } from '../../components-sauce-demo/product-details';
 let page;
 
 test.beforeAll( async ({ browser }) => {
@@ -6,40 +10,31 @@ test.beforeAll( async ({ browser }) => {
   page = await context.newPage();
   await page.goto('https://www.saucedemo.com/');
 
-  await page.locator('[data-test="username"]').click();
-  await page.locator('[data-test="username"]').fill('standard_user');
-  await page.locator('[data-test="password"]').click();
-  await page.locator('[data-test="password"]').fill('secret_sauce');
-  await page.locator('[data-test="login-button"]').click();
+  const logIn = new LogInComponent(page)
+await logIn.LogIn({username:'standard_user', 
+  password: 'secret_sauce'
+})
 });
+
 test('place an order with successful result', async ({}) => {
-  //add to cart product
-  await page.locator('[data-test="add-to-cart-test\\.allthethings\\(\\)-t-shirt-\\(red\\)"]').click();
-  await page.locator('[data-test="shopping-cart-link"]').click();
-  //make check out
-  await page.locator('[data-test="checkout"]').click();
-  //fill in all information
-  await page.locator('[data-test="firstName"]').click();
-  await page.locator('[data-test="firstName"]').fill('tylenea');
-  await page.locator('[data-test="lastName"]').click();
-  await page.locator('[data-test="lastName"]').fill('test');
-  await page.locator('[data-test="postalCode"]').click();
-  await page.locator('[data-test="postalCode"]').fill('555');
-// check title and continue button
+  const paymentPage = new PaymentPage(page);
+
+  await paymentPage.CartComponent.addToCart('backpack');
+  await paymentPage.CartComponent.checkout();
+ 
+  await paymentPage.ProductDetails.FillForm();
   await expect(page.locator('[data-test="continue"]')).toBeVisible();
   await expect(page.locator('[data-test="title"]')).toBeVisible();
-//clicking continue
-  await page.locator('[data-test="continue"]').click();
-//checking headers
+  
+  await paymentPage.ProductDetails.Continue();
+
   await expect(page.locator('[data-test="total-info-label"]')).toBeVisible();
   await expect(page.locator('[data-test="total-label"]')).toBeVisible();
   await expect(page.locator('[data-test="finish"]')).toBeVisible();
-//finishing placing an order
-  await page.locator('[data-test="finish"]').click();
-//check of succesfull result
-  await expect(page.locator('[data-test="complete-header"]')).toBeVisible();
-  await expect(page.locator('[data-test="complete-header"]')).toBeVisible();
-  await expect(page.locator('[data-test="back-to-products"]')).toBeVisible();
 
-  await page.locator('[data-test="back-to-products"]').click();
+  await paymentPage.finishOrder();
+
+  await paymentPage.SuccessfullPaymentAssetion;
+  
+ await paymentPage.navigaToProducts();
 });

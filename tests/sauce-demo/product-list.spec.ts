@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test';
+import { LogInComponent } from '../../components-sauce-demo/LogInComponent';
+import { ProductPage } from '../../sauce-demo-pages/ProductsPage';
 
 let page;
 
@@ -7,11 +9,9 @@ test.beforeAll( async ({ browser }) => {
   page = await context.newPage();
   await page.goto('https://www.saucedemo.com/');
 
-  await page.locator('[data-test="username"]').click();
-  await page.locator('[data-test="username"]').fill('standard_user');
-  await page.locator('[data-test="password"]').click();
-  await page.locator('[data-test="password"]').fill('secret_sauce');
-  await page.locator('[data-test="login-button"]').click();
+const logIn = new LogInComponent(page)
+await logIn.LogIn({username:'standard_user', 
+  password: 'secret_sauce'})
 });
 
 test('Product list has titles', async ({}) => {
@@ -26,76 +26,66 @@ test('Product list has titles', async ({}) => {
 //  await page.locator('[data-test="product-sort-container"]').selectOption('az');
 //  await page.getByRole('button', { name: 'Close Menu' }).click();
   
-  
-  await expect(page.locator('[data-test="item-4-title-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-0-title-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-1-title-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-5-title-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-2-title-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-3-title-link"]')).toBeVisible();
+  const productPage  = new ProductPage(page)
+  await productPage.Products.getTitle(0);
+  await productPage.Products.getTitle(1);
+  await productPage.Products.getTitle(2);
+  await productPage.Products.getTitle(3);
+  await productPage.Products.getTitle(4);
+  await productPage.Products.getTitle(5);
 });
 
 test('Product list has images', async ({}) => {
-  await expect(page.locator('[data-test="item-4-img-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-0-img-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-1-img-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-5-img-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-2-img-link"]')).toBeVisible();
-  await expect(page.locator('[data-test="item-3-img-link"]')).toBeVisible();
+  const productPage  = new ProductPage(page)
+  await productPage.Products.getImage(0);
+  await productPage.Products.getImage(1);
+  await productPage.Products.getImage(2);
+  await productPage.Products.getImage(3);
+  await productPage.Products.getImage(4);
+  await productPage.Products.getImage(5);
 });
 
 test('Product list has prices', async ({}) => { 
-  await expect(page.getByText('$29.99')).toBeVisible();
-  await expect(page.getByText('$9.99')).toBeVisible();
-  await expect(page.getByText('$15.99').first()).toBeVisible();
-  await expect(page.getByText('$49.99')).toBeVisible();
-  await expect(page.getByText('$7.99')).toBeVisible();
-  await expect(page.getByText('$15.99').nth(1)).toBeVisible();
+  const productPage  = new ProductPage(page)
+  await productPage.Products.getPrice;
 });
 
 test('Product list page has add to cart button', async ({}) => {
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-backpack"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-bike-light"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-fleece-jacket"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-onesie"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-test\\.allthethings\\(\\)-t-shirt-\\(red\\)"]')).toBeVisible();
+  const productPage  = new ProductPage(page)
+  await productPage.Products.getAddToCartButton('backpack');
+  await productPage.Products.getAddToCartButton('bike-light');
+  await productPage.Products.getAddToCartButton("bolt-t-shirt");
+  await productPage.Products.getAddToCartButton('fleece-jacket');
+  await productPage.Products.getAddToCartButton('onesie');
 
 });
 
 test('Add to cart product and than remove from the cart', async ({}) => {
-  //add products to cart
-  
-  await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-  await page.locator('[data-test="add-to-cart-sauce-labs-bike-light"]').click();
-  await page.locator('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]').click();
-  await page.locator('[data-test="add-to-cart-sauce-labs-fleece-jacket"]').click();
-  await page.locator('[data-test="add-to-cart-sauce-labs-onesie"]').click();
+  const productPage  = new ProductPage(page)
+  await productPage.Products.AddToCartButton('backpack');
+  await productPage.Products.AddToCartButton('bike-light');
+  await productPage.Products.AddToCartButton("bolt-t-shirt");
+  await productPage.Products.AddToCartButton('fleece-jacket');
+  await productPage.Products.AddToCartButton('onesie');
   await page.locator('[data-test="add-to-cart-test\\.allthethings\\(\\)-t-shirt-\\(red\\)"]').click();
   
-  //check if remove button is displayed
-  await expect(page.locator('[data-test="remove-sauce-labs-backpack"]')).toBeVisible();
-  await expect(page.locator('[data-test="remove-sauce-labs-bike-light"]')).toBeVisible();
-  await expect(page.locator('[data-test="remove-sauce-labs-bolt-t-shirt"]')).toBeVisible();
-  await expect(page.locator('[data-test="remove-sauce-labs-fleece-jacket"]')).toBeVisible();
-  await expect(page.locator('[data-test="remove-sauce-labs-onesie"]')).toBeVisible();
+  await productPage.Products.getRemoveButton('backpack');
+  await productPage.Products.getRemoveButton('bike-light');
+  await productPage.Products.getRemoveButton("bolt-t-shirt");
+  await productPage.Products.getRemoveButton('fleece-jacket');
+  await productPage.Products.getRemoveButton('onesie');
   await expect(page.locator('[data-test="remove-test\\.allthethings\\(\\)-t-shirt-\\(red\\)"]')).toBeVisible();
 
- //remove products from the cart
-  
-  await page.locator('[data-test="remove-sauce-labs-backpack"]').click();
-  await page.locator('[data-test="remove-sauce-labs-bike-light"]').click();
-  await page.locator('[data-test="remove-sauce-labs-bolt-t-shirt"]').click();
-  await page.locator('[data-test="remove-sauce-labs-fleece-jacket"]').click();
-  await page.locator('[data-test="remove-sauce-labs-onesie"]').click();
-  await page.locator('[data-test="remove-test\\.allthethings\\(\\)-t-shirt-\\(red\\)"]').click();
+ await productPage.Products.RemoveButton('backpack');
+ await productPage.Products.RemoveButton('bike-light');
+ await productPage.Products.RemoveButton("bolt-t-shirt");
+ await productPage.Products.RemoveButton('fleece-jacket');
+ await productPage.Products.RemoveButton('onesie');
+ await page.locator('[data-test="remove-test\\.allthethings\\(\\)-t-shirt-\\(red\\)"]').click();
 
-  //check if add to cart button is displayed
-
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-backpack"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-bike-light"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-fleece-jacket"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-sauce-labs-onesie"]')).toBeVisible();
-  await expect(page.locator('[data-test="add-to-cart-test\\.allthethings\\(\\)-t-shirt-\\(red\\)"]')).toBeVisible();
+  await productPage.Products.getAddToCartButton('backpack');
+  await productPage.Products.getAddToCartButton('bike-light');
+  await productPage.Products.getAddToCartButton("bolt-t-shirt");
+  await productPage.Products.getAddToCartButton('fleece-jacket');
+  await productPage.Products.getAddToCartButton('onesie');
 });
