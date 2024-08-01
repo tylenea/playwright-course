@@ -24,19 +24,17 @@ this.page.getByRole('button', { name: 'Add to cart' }).click();
 this.page.getByRole('button', { name: 'Remove item' }).first().click();      
 }
 ProductDetailAsserion = async ({
-        title,
         description,        
     } : {
-    title: string;
     description: string,
     })=>{
-    await expect(this.page.locator(title)).toBeVisible();
-    await expect(this.page.getByText(description)).toBeVisible();
-   await expect(this.page.getByText('Slim Fit, 5oz 100% Cotton T-')).toBeVisible();
-   await expect(this.page.getByRole('heading', { name: '$' })).toBeVisible();
+  await expect(this.page.getByText(description)).toBeVisible();
+  await expect(this.page.locator('h3')).toBeVisible();  
+  await expect(this.page.getByText('Slim Fit, 5oz 100% Cotton T-')).toBeVisible();
+  await expect(this.page.getByRole('heading', { name: '$' })).toBeVisible();
   await expect(this.page.getByRole('button', { name: 'Add to cart' })).toBeVisible();
   await expect(this.page.locator('.styles')).toBeVisible();
-  await expect(this.page.locator('h3')).toBeVisible(); 
+  
 }
 }
 export {ProductDetailsComponent}

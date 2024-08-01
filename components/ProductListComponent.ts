@@ -17,22 +17,24 @@ getPrice = (title: string) => {
     .nth(1);
 };
 getImage = (n: number) => {
-    return this.page.locator("li:nth-child(" + n +">) .styles");
+    return this.page.locator("li:nth-child(" + n +")> .styles");
 };}
 
- class ColorPicker { private stylePickerLocator: string
+ class ColorPicker { 
     constructor (private page: Page,) {
      this.page = page;
-     this.stylePickerLocator = '.style-picker > div:nth-child(';
 }
-async colorClick(n: number) {
+ colorClick= async(n: number) =>{
     await this.page.locator(`.style-picker > div:nth-child(${n})`).first().click();
   }
-
-  async HeadingLink(title:string){
-   return (this.page.locator('li')
+colorAssert = async(n:number)=> {
+    await expect(this.page.locator(`.style-picker > div:nth-child(${n})`).first()).toBeVisible();
+};
+  
+HeadingLink = async(title:string)=>{
+   await expect(this.page.locator('li')
     .filter({ hasText: title })
-    .getByRole('link').first())
+    .getByRole('link').first()).toBeVisible();
   }
 }
 

@@ -11,7 +11,7 @@ getFormTitle = () => {
 };
 
 getMap = () => {
-    return this.page. locator("map");
+    return this.page.locator("#map");
 };
 
 fillContactForm = async ({
