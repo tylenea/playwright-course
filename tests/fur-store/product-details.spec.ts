@@ -19,7 +19,6 @@ const {getHeading} = new ProductDetailsComponent(page);
  
 const {ProductDetailAsserion} = new ProductDetailsComponent(page);
   await ProductDetailAsserion({
-    title:'Sacha the Deer Sacha’s',
     description:'Slim Fit, 5oz 100% Cotton T-'
  });
 //const colorPicker = new ProductDetailsComponent(page);
@@ -45,7 +44,6 @@ test('Bumble the Elephant product details', async ({}) => {
 
 const {ProductDetailAsserion} = new ProductDetailsComponent(page);
   await ProductDetailAsserion({
-    title:'Bumble the Elephant Bumble',
     description:'Bumble the humble elephant'
  });
 
@@ -63,7 +61,6 @@ test('Gerald the Giraffe product details', async ({}) => {
  
 const {ProductDetailAsserion} = new ProductDetailsComponent(page);
   await ProductDetailAsserion({
-    title:'Gerald the Giraffe Gerald',
     description:'Gerald the giraffe isn’t'
  });
     
@@ -85,7 +82,6 @@ test('Todd the Hedgehog product details', async ({}) => {
  
 const {ProductDetailAsserion} = new ProductDetailsComponent(page);
   await ProductDetailAsserion({
-    title:'Todd the Hedgehog Todd',
     description:'Todd the hedgehog may have a'
  });
   
@@ -102,7 +98,6 @@ test('Scar the Lion product details', async ({}) => {
 
   const {ProductDetailAsserion} = new ProductDetailsComponent(page);
   await ProductDetailAsserion({
-    title:'Scar the Lion Scar',
     description:'Scar the lion is always true'
  });
   await expect(page.locator('.styles')).toBeVisible();
@@ -118,7 +113,6 @@ test('Gavin the Tiger product details', async ({}) => {
  
 const {ProductDetailAsserion} = new ProductDetailsComponent(page);
   await ProductDetailAsserion({
-    title:'Gavin the tiger Gavin',
     description:'Gavin the tiger was brought'
  });
   await page.locator('.style-picker > div:nth-child(2)').click();

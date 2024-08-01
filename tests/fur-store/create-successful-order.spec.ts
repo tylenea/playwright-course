@@ -1,42 +1,38 @@
 import { test, expect, Page } from '@playwright/test';
 import { CartComponent } from '../../components/CartComponent';
-import { PaymentDetailsComponent } from '../../components/PaymentDetailComponent';
 import { PaymentPage } from '../../pages/PaymentPage';
-import { pathToFileURL } from 'url';
 let page: Page;
+let cart: CartComponent;
+let paymentPage: PaymentPage;
 
 test.beforeAll( async ({ browser }) => {
   const context = await browser.newContext();
   page = await context.newPage();
   await page.goto('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/');
-  
-  test.setTimeout(60000);
+  cart = new CartComponent(page);
+  paymentPage = new PaymentPage(page);
 });
 
 test('Create an order should display success page', async ({}) => {
-  const cart = new CartComponent(page);
-  const paymentPage = new PaymentPage(page);
- 
-  await cart.addToCart('Bumble the Elephant' );
-  await cart.changeCartOptions();
+  await cart.addToCart('Bumble the Elephant');
+  await cart.incrementQuantity();
   await cart.checkout();
- 
-  await paymentPage.billingDetails.fillOutForm();
-  
-  await page.waitForResponse(
-   (response) =>
-      response.url().includes("api/localization/addresses") &&
-      response.status() === 200 &&
-      response.request().method() === "GET"
-  );
-  
-  await paymentPage.billingDetails.fillOutApartment();
-  await paymentPage.billingDetails.FillOutCity();
-  await paymentPage.billingDetails.fillOutZipCode();
- 
+
+  await paymentPage.billingDetails.fillOutForm({
+    name: 'tylenea',
+    email: 'tylenea@gmail.com',
+    streetAddress: 'Washington',
+    zipCode: '51200',
+    apartment: '123',
+    city: 'Washington',
+  });
   await paymentPage.billingDetails.submit();
- 
-  await paymentPage.paymentDetails.fillCardDetails();
+  await paymentPage.paymentDetails.fillCardDetails({
+    cardNumber: '4242424242424242',
+    month: 12,
+    year: new Date().getFullYear() + 1,
+    cvv: '123',
+  });
   await paymentPage.paymentDetails.placeOrder();
  
   await paymentPage.successfulPayment.assertSuccessScreen();
