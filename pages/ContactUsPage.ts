@@ -9,10 +9,10 @@ class ContactUsPage {
   }
 
   async open() {
-    await this.page.goto('contact/');
+    await this.page.goto('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/contact/');
   }
   getHeading(){
-    return this.page.locator("h1");
+    return this.page.getByRole('heading', { name: 'Get in touch' })
   }
   async getFooter(){
     return this.page.getByRole("contentinfo")
