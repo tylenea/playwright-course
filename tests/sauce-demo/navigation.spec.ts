@@ -2,6 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import { LogInComponent } from '../../components-sauce-demo/LogInComponent';
 import { NavigationComponent } from '../../components-sauce-demo/navigationComponent';
 let page: Page;
+let Navigation: NavigationComponent;
 
 test.beforeAll( async ({ browser }) => {
   const context = await browser.newContext();
@@ -10,43 +11,29 @@ test.beforeAll( async ({ browser }) => {
   const logIn = new LogInComponent(page)
 await logIn.LogIn({username:'standard_user', 
   password: 'secret_sauce'
-})
-
-  
+});
+Navigation = new NavigationComponent(page);  
 });
 
 test('Sidebar Navigation', async ({}) => {
-  const Navigation = new NavigationComponent(page);
   await Navigation.Menubutton("Open Menu");
-  await Navigation.SideBarAssertion;
+  await Navigation.SideBarAssertion();
 });
 
 test('Top Navigation assertion', async ({}) => {
-  const Navigation = new NavigationComponent(page);
-  await Navigation.TopNavigationAssertion;
+  await Navigation.TopNavigationAssertion();
 });
 
 test('Shoppping cart check', async ({}) => {
-await page.locator('[data-test="shopping-cart-link"]').click();  
-
-await expect(page.locator('[data-test="checkout"]')).toBeVisible();
-await expect(page.locator('[data-test="continue-shopping"]')).toBeVisible();
-await expect(page.locator('[data-test="title"]')).toBeVisible();
-await expect(page.locator('[data-test="cart-desc-label"]')).toBeVisible();
-await expect(page.locator('[data-test="cart-quantity-label"]')).toBeVisible();
-await page.locator('[data-test="continue-shopping"]').click();
+await Navigation.ShoppingCartAssertion();
 
 });
 
 test('Product filter check', async ({}) => {
-  const  {ProductFilter} = new NavigationComponent(page)
-  await ProductFilter();
-
+  await Navigation.ProductFilter();
 });
 
 test('Footer navigation', async ({}) => {
-  const {FooterNavigation} = new NavigationComponent(page);
-  const {FooterAssertion} = new NavigationComponent(page);
-  await FooterNavigation;
-  await FooterAssertion;
+  await Navigation.FooterNavigation();
+  await Navigation.FooterAssertion();
 });

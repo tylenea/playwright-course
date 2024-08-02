@@ -1,9 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { LogInComponent } from '../../components-sauce-demo/LogInComponent';
 import { PaymentPage } from '../../sauce-demo-pages/Payment-page';
-import { CartComponent} from '../../components-sauce-demo/cart-component';
-import { ProductDetails } from '../../components-sauce-demo/product-details';
-let page;
+let page: Page;
+let paymentPage: PaymentPage;
 
 test.beforeAll( async ({ browser }) => {
   const context = await browser.newContext();
@@ -13,28 +12,29 @@ test.beforeAll( async ({ browser }) => {
   const logIn = new LogInComponent(page)
 await logIn.LogIn({username:'standard_user', 
   password: 'secret_sauce'
-})
+});
+paymentPage = new PaymentPage(page);
 });
 
 test('place an order with successful result', async ({}) => {
-  const paymentPage = new PaymentPage(page);
 
   await paymentPage.CartComponent.addToCart('backpack');
   await paymentPage.CartComponent.checkout();
  
-  await paymentPage.ProductDetails.FillForm();
-  await expect(page.locator('[data-test="continue"]')).toBeVisible();
-  await expect(page.locator('[data-test="title"]')).toBeVisible();
-  
+  await paymentPage.ProductDetails.fillOutForm(
+    {
+      firstName: "tylenea",
+  lastName: "anime",
+  postalCode: "555",
+}
+  );  
   await paymentPage.ProductDetails.Continue();
 
-  await expect(page.locator('[data-test="total-info-label"]')).toBeVisible();
-  await expect(page.locator('[data-test="total-label"]')).toBeVisible();
-  await expect(page.locator('[data-test="finish"]')).toBeVisible();
+  await paymentPage.SuccessfullPaymentAssetion.ContinueCheck();
 
   await paymentPage.finishOrder();
 
-  await paymentPage.SuccessfullPaymentAssetion;
+  await paymentPage.SuccessfullPaymentAssetion.FinishPaymentAssertion();
   
  await paymentPage.navigaToProducts();
 });

@@ -1,8 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { LogInComponent } from '../../components-sauce-demo/LogInComponent';
 import { ProductPage } from '../../sauce-demo-pages/ProductsPage';
 
-let page;
+let page:Page;
+let productPage:ProductPage;
 
 test.beforeAll( async ({ browser }) => {
   const context = await browser.newContext();
@@ -11,22 +12,11 @@ test.beforeAll( async ({ browser }) => {
 
 const logIn = new LogInComponent(page)
 await logIn.LogIn({username:'standard_user', 
-  password: 'secret_sauce'})
+  password: 'secret_sauce'});
+  productPage  = new ProductPage(page)
 });
 
-test('Product list has titles', async ({}) => {
-//  await page.goto('https://www.saucedemo.com/');
-//  await expect(page.locator('[data-test="username"]')).toBeVisible();
-//  await expect(page.locator('[data-test="password"]')).toBeVisible();
-//  await expect(page.locator('[data-test="login-button"]')).toBeVisible();
-
-//    await page.getByRole('button', { name: 'Open Menu' }).click();
-//  await page.locator('[data-test="product-sort-container"]').selectOption('lohi');
-//  await page.locator('[data-test="product-sort-container"]').selectOption('hilo');
-//  await page.locator('[data-test="product-sort-container"]').selectOption('az');
-//  await page.getByRole('button', { name: 'Close Menu' }).click();
-  
-  const productPage  = new ProductPage(page)
+test('Product list has titles', async ({}) => {  
   await productPage.Products.getTitle(0);
   await productPage.Products.getTitle(1);
   await productPage.Products.getTitle(2);
@@ -36,7 +26,6 @@ test('Product list has titles', async ({}) => {
 });
 
 test('Product list has images', async ({}) => {
-  const productPage  = new ProductPage(page)
   await productPage.Products.getImage(0);
   await productPage.Products.getImage(1);
   await productPage.Products.getImage(2);
@@ -45,13 +34,11 @@ test('Product list has images', async ({}) => {
   await productPage.Products.getImage(5);
 });
 
-test('Product list has prices', async ({}) => { 
-  const productPage  = new ProductPage(page)
+test('Product list has prices', async ({}) => {
   await productPage.Products.getPrice;
 });
 
 test('Product list page has add to cart button', async ({}) => {
-  const productPage  = new ProductPage(page)
   await productPage.Products.getAddToCartButton('backpack');
   await productPage.Products.getAddToCartButton('bike-light');
   await productPage.Products.getAddToCartButton("bolt-t-shirt");
@@ -61,7 +48,6 @@ test('Product list page has add to cart button', async ({}) => {
 });
 
 test('Add to cart product and than remove from the cart', async ({}) => {
-  const productPage  = new ProductPage(page)
   await productPage.Products.AddToCartButton('backpack');
   await productPage.Products.AddToCartButton('bike-light');
   await productPage.Products.AddToCartButton("bolt-t-shirt");
