@@ -2,7 +2,8 @@ import { Page, expect } from '@playwright/test';
 import { ContactUsComponent } from '../components/ContactFormComponents';
 
 class ContactUsPage {
-  ContactUsComponent: ContactUsComponent = new ContactUsComponent(this.page)
+  form = new ContactUsComponent(this.page);
+  heading = this.page.getByRole('heading', { name: 'Contact us' });
 
   constructor(private page: Page) {
     this.page = page;
@@ -10,12 +11,7 @@ class ContactUsPage {
 
   async open() {
     await this.page.goto('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/contact/');
-  }
-  getHeading(){
-    return this.page.getByRole('heading', { name: 'Get in touch' })
-  }
-  async getFooter(){
-    return this.page.getByRole("contentinfo")
+    await expect(this.heading).toBeVisible();
   }
 }
 
