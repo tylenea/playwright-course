@@ -1,26 +1,36 @@
-import { test, expect,Page } from '@playwright/test';
-import{OurStoryComponent} from "../../components/OurStoryComponent"
-let page:Page;
+import { test, expect } from '@playwright/test';
+import { OurStoryPage } from '../../pages/OurStoryPage';
 
-test.beforeAll( async ({ browser }) => {
-  const context = await browser.newContext();
-  page = await context.newPage();
-  await page.goto('https://ilarionhalushka.github.io/jekyll-ecommerce-demo/about/');
+let ourStoryPage: OurStoryPage;
+
+test.beforeAll(async ({ browser }) => {
+  const page = await browser.newPage();
+  ourStoryPage = new OurStoryPage(page);
+  await ourStoryPage.open();
 });
 
-test('Check that our story has heading', async ({}) => {
-  const OurStory = new OurStoryComponent(page);
-  await OurStory.getHeading;
+test('our story page has avatars and employee names', async () => {
+  await expect(ourStoryPage.content.getAvatar('Ava Sandler')).toBeVisible();
+  await expect(ourStoryPage.content.getEmployeeName('Ava Sandler')).toBeVisible();
+
+  await expect(ourStoryPage.content.getAvatar('Steph Poco')).toBeVisible();
+  await expect(ourStoryPage.content.getEmployeeName('Steph Poco')).toBeVisible();
 });
 
-test('Our story page has avatars of founders', async ({}) => {
-  const OurStory = new OurStoryComponent(page);
-  await OurStory.getAvatar;
-});
+test('our story page has motivation paragraphs', async () => {
+  await expect(ourStoryPage.content.getMotivationParagraph('Passion')).toBeVisible();
+  await expect(
+    ourStoryPage.content.getMotivationText('What more could you want from')
+  ).toBeVisible();
 
-test('Our story page has motivation paraghaps', async ({}) => {
-  const OurStory = new OurStoryComponent(page);
-  await OurStory.getParagraphHeading;
-  await OurStory.getParagraph;
+  await expect(ourStoryPage.content.getMotivationParagraph('Animal')).toBeVisible();
+  await expect(
+    ourStoryPage.content.getMotivationText("It's easy to forget that we'")
+  ).toBeVisible();
+
+  await expect(ourStoryPage.content.getMotivationParagraph('Style')).toBeVisible();
+  await expect(
+    ourStoryPage.content.getMotivationText('We like to keep things plain')
+  ).toBeVisible();
 });
 
