@@ -53,5 +53,17 @@ let currentYear = now.getFullYear();
     await expect(this.page.getByText('© 2024 Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy'))
     .toContainText(`© ${currentYear} Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy`);
 }
+
+ ShoppingCartAssertion = async ()=>{
+    await this.page.locator('[data-test="shopping-cart-link"]').click();  
+
+await expect(this.page.locator('[data-test="checkout"]')).toBeVisible();
+await expect(this.page.locator('[data-test="continue-shopping"]')).toBeVisible();
+await expect(this.page.locator('[data-test="title"]')).toBeVisible();
+await expect(this.page.locator('[data-test="cart-desc-label"]')).toBeVisible();
+await expect(this.page.locator('[data-test="cart-quantity-label"]')).toBeVisible();
+await this.page.locator('[data-test="continue-shopping"]').click();
+ }
+
 }
  export{NavigationComponent} 

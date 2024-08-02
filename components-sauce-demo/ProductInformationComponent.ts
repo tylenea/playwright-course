@@ -4,7 +4,7 @@ class ProductInfoComponent {
     constructor(private page: Page) {
     this.page = page;
     }
-NavigaToProduct = async(n: number)=>{
+NavigateToProduct = async(n: number)=>{
     await this.page.locator(`[data-test="item-${n}-title-link"]`).click();
 }
  ProductInfoAssertion =async(ProductName: string)=>{
